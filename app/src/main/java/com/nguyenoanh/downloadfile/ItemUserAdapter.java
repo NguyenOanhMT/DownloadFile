@@ -1,79 +1,88 @@
 package com.nguyenoanh.downloadfile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.nguyenoanh.downloadfile.Activity.MainActivity;
+import com.nguyenoanh.downloadfile.Model.ItemUser;
+
 import java.util.List;
 
-public class ItemUserAdapter extends ArrayAdapter {
+public class ItemUserAdapter extends RecyclerView.Adapter<ItemUserAdapter.ViewHolder> {
 
-    List list = new ArrayList ();
+    private Context context;
+    private List<ItemUser> list;
 
-
-    public ItemUserAdapter(@NonNull Context context, int resource) {
-        super (context, resource);
-    }
-
-    public void add(ItemUser object) {
-        super.add (object);
-        list.add (object);
-    }
-
-    @Override
-    public int getCount() {
-        return list.size ();
-    }
-
-    @Nullable
-    @Override
-    public Object getItem(int position) {
-        return list.get (position);
+    public ItemUserAdapter(Context context, List<ItemUser> list) {
+        this.context = context;
+        this.list = list;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        view = convertView;
+        LayoutInflater inflater = LayoutInflater.from (parent.getContext ());
+        view = inflater.inflate (R.layout.item_list, parent, false);
+        final ViewHolder viewHolder = new ViewHolder (view);
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        ItemUserAdapterHolder holder;
-        if(view == null){
-            LayoutInflater inflater = (LayoutInflater) this.getContext ().getSystemService (Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate (R.layout.item_list, parent, false);
+                Intent i = new Intent(context, MainActivity.class);
+                i.putExtra("id",list.get(viewHolder.getAdapterPosition()).getId ());
+                i.putExtra("name",list.get(viewHolder.getAdapterPosition()).getName ());
+                i.putExtra("email",list.get(viewHolder.getAdapterPosition()).getEmail ());
+                i.putExtra("address",list.get(viewHolder.getAdapterPosition()).getAddress ().toString ());
+                i.putExtra("phone",list.get(viewHolder.getAdapterPosition()).getPhone ());
 
-            holder = new ItemUserAdapterHolder ();
-            holder.tv_id = view.findViewById (R.id.tv_id);
-            holder.tv_name = view.findViewById (R.id.tv_name);
-            holder.tv_email = view.findViewById (R.id.tv_email);
-            holder.tv_address = view.findViewById (R.id.tv_address);
-            holder.tv_phone = view.findViewById (R.id.tv_phone);
+                context.startActivity(i);
 
-            view.setTag (holder);
-        } else {
-            holder = (ItemUserAdapterHolder) view.getTag ();
+            }
+        });
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.tv_id.setText (list.get (position).getId ());
+        holder.tv_name.setText (list.get (position).getName ());
+        holder.tv_email.setText (list.get (position).getEmail ());
+        holder.tv_address.setText (list.get (position).getAddress ().toString ());
+        holder.tv_phone.setText (list.get (position).getPhone ());
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        TextView tv_id, tv_name, tv_email, tv_address, tv_phone;
+        LinearLayout view_container;
+
+        public ViewHolder(@NonNull View itemView) {
+            super (itemView);
+
+            view_container = itemView.findViewById (R.id.item_user);
+            tv_id = itemView.findViewById (R.id.tv_id);
+            tv_name = itemView.findViewById (R.id.tv_name);
+            tv_email = itemView.findViewById (R.id.tv_email);
+            tv_address = itemView.findViewById (R.id.tv_address);
+            tv_phone = itemView.findViewById (R.id.tv_phone);
         }
-
-        ItemUser itemUser = (ItemUser) this.getItem (position);
-
-        holder.tv_id.setText (itemUser.getId ());
-        holder.tv_name.setText (itemUser.getName ());
-        holder.tv_email.setText (itemUser.getEmail ());
-        holder.tv_address.setText (itemUser.getAddress ());
-        holder.tv_phone.setText (itemUser.getPhone ());
-
-        return view;
     }
 
-    static class ItemUserAdapterHolder{
-        TextView tv_id, tv_name, tv_email,tv_address, tv_phone;
-
+    @Override
+    public int getItemCount() {
+        return list.size ();
     }
+
+//    public void add(ItemUser itemUser) {
+//        list.add (itemUser);
+//    }
 }

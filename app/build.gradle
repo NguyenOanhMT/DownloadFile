@@ -26,6 +26,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'com.google.code.gson:gson:2.8.6'
 
+    implementation 'com.android.volley:volley:1.1.0'
+    implementation 'com.android.support:recyclerview-v7:20.0.+'
+    implementation 'com.android.support:design:27.0.2'
+
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
