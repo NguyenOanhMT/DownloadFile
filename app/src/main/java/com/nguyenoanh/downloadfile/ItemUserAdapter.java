@@ -53,11 +53,23 @@ public class ItemUserAdapter extends RecyclerView.Adapter<ItemUserAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tv_id.setText (list.get (position).getId ());
-        holder.tv_name.setText (list.get (position).getName ());
-        holder.tv_email.setText (list.get (position).getEmail ());
-        holder.tv_address.setText (list.get (position).getAddress ().toString ());
-        holder.tv_phone.setText (list.get (position).getPhone ());
+        holder.tv_id.setText ("ID: " + list.get (position).getId ());
+        if ( list.get (position).getName ().length () >= 12) {
+            holder.tv_name.setText ("Name: " + list.get (position).getName ().substring (0,12) + " ...");
+        } else {
+            holder.tv_name.setText ("Name: " + list.get (position).getName ());
+        }
+        if ( list.get (position).getEmail ().length () >= 12) {
+            holder.tv_email.setText ("Email: " + list.get (position).getEmail ().substring (0,11) + " ...");
+        } else {
+            holder.tv_email.setText ("Email: " + list.get (position).getEmail ());
+        }
+        if ( list.get (position).getEmail ().length () >= 12) {
+            holder.tv_address.setText ("Address: " + list.get (position).getAddress ().toString ().substring (0,11) + " ...");
+        } else {
+            holder.tv_address.setText ("Address: " + list.get (position).getAddress ().toString ());
+        }
+        holder.tv_phone.setText ("Phone: " + list.get (position).getPhone ());
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -82,7 +94,4 @@ public class ItemUserAdapter extends RecyclerView.Adapter<ItemUserAdapter.ViewHo
         return list.size ();
     }
 
-//    public void add(ItemUser itemUser) {
-//        list.add (itemUser);
-//    }
 }

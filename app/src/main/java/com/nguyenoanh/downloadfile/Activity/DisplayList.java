@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.android.volley.RequestQueue;
@@ -13,6 +14,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.nguyenoanh.downloadfile.ItemUserAdapter;
 import com.nguyenoanh.downloadfile.Model.ItemUser;
 import com.nguyenoanh.downloadfile.R;
@@ -27,11 +30,7 @@ import java.util.List;
 public class DisplayList extends AppCompatActivity {
 
     private final String JSON_URL ="https://jsonplaceholder.typicode.com/users";
-
     String dataJson;
-    JSONObject jsonObject;
-    private JsonArrayRequest request ;
-    private RequestQueue requestQueue ;
 
     ItemUserAdapter adapter;
     RecyclerView recyclerView;
@@ -49,47 +48,21 @@ public class DisplayList extends AppCompatActivity {
 
         dataJson = getIntent ().getExtras ().getString ("json_data");
 
-        request = new JsonArrayRequest (JSON_URL, new Response.Listener<JSONArray> () {
+        ArrayList<ItemUser> objects = new Gson().fromJson(dataJson, new TypeToken<ArrayList<ItemUser>> (){}.getType());
 
-            @Override
-            public void onResponse(JSONArray response) {
-                jsonObject = null;
+        Log.d ("abc", objects.toString ());
 
-                for (int i = 0; i < response.length (); i++) {
-                    try {
-                        jsonObject = response.getJSONObject (i);
-                        ItemUser item = new ItemUser ();
-
-                        item.setId (jsonObject.getString ("id"));
-                        item.setName (jsonObject.getString ("name"));
-                        item.setEmail (jsonObject.getString ("email"));
-                        item.setAddress (null);
-//                        item.setAddress (jsonObject.getString ("address"));
-                        item.setPhone (jsonObject.getString ("phone"));
-                    } catch (JSONException e) {
-                        e.printStackTrace ();
-                    }
-                }
-
-                setupRecyclerView (list);
-            }
-        }, new Response.ErrorListener () {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-
-        requestQueue = Volley.newRequestQueue(DisplayList.this);
-        requestQueue.add(request) ;
+        list.clear ();
+        list.addAll (objects);
+        setupRecyclerView (list);
     }
 
-
         private void setupRecyclerView( List<ItemUser> list){
+            recyclerView.setLayoutManager(new LinearLayoutManager (this));
             adapter = new ItemUserAdapter (this,list) ;
             recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new LinearLayoutManager (this));
             recyclerView.setAdapter (adapter);
+            adapter.notifyDataSetChanged ();
         }
 
 }

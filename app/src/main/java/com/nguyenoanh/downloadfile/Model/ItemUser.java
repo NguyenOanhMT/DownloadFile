@@ -1,5 +1,7 @@
 package com.nguyenoanh.downloadfile.Model;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONObject;
 
 public class ItemUser extends JSONObject {
@@ -83,5 +85,19 @@ public class ItemUser extends JSONObject {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemUser{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", address=" + address +
+                ", phone='" + phone + '\'' +
+                ", website='" + website + '\'' +
+                ", company=" + company +
+                '}';
     }
 }
